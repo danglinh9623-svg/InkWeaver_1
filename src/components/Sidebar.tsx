@@ -1,10 +1,13 @@
 import React, { useMemo } from 'react';
-import { ChatSession } from '../types';
+import { ChatSession, ModelConfig, DEFAULT_MODEL_CONFIG } from '../types';
 import { Plus, MessageSquare, Users, Trash2, BookOpen, Download, Smartphone } from 'lucide-react';
+import ModelSettings from './ModelSettings';
 
 interface SidebarProps {
   sessions: ChatSession[];
   currentSessionId: string | null;
+  currentModelConfig?: ModelConfig;
+  onUpdateModelConfig: (config: ModelConfig) => void;
   onSelectSession: (id: string) => void;
   onNewSession: () => void;
   onDeleteSession: (id: string) => void;
@@ -18,6 +21,8 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({
   sessions,
   currentSessionId,
+  currentModelConfig,
+  onUpdateModelConfig,
   onSelectSession,
   onNewSession,
   onDeleteSession,
@@ -28,6 +33,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   isOpen
 }) => {
   
+  // Group sessions by date category
   const groupedSessions = useMemo(() => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -109,7 +115,8 @@ const Sidebar: React.FC<SidebarProps> = ({
   const groupKeys: (keyof typeof groupedSessions)[] = ['Today', 'Yesterday', 'Previous 7 Days', 'Older Stories'];
 
   return (
-    <div className="w-64 bg-ink-950 border-r border-ink-800 flex flex-col h-full shrink-0 transition-all duration-300">
+    <div className="w-72 bg-ink-950 border-r border-ink-800 flex flex-col h-full shrink-0 transition-all duration-300 shadow-2xl z-50">
+      {/* Header */}
       <div className="p-4 border-b border-ink-800 bg-ink-950/50">
         <h1 className="text-xl font-serif font-bold text-white flex items-center gap-2 mb-4">
           <BookOpen className="w-6 h-6 text-indigo-400" />
@@ -124,7 +131,8 @@ const Sidebar: React.FC<SidebarProps> = ({
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-3 space-y-4">
+      {/* Session List */}
+      <div className="flex-1 overflow-y-auto p-3 space-y-4 min-h-0">
         {sessions.length === 0 && (
           <div className="flex flex-col items-center justify-center py-10 text-ink-500 space-y-2">
             <BookOpen className="w-8 h-8 opacity-20" />
@@ -149,23 +157,36 @@ const Sidebar: React.FC<SidebarProps> = ({
         })}
       </div>
 
-      <div className="p-4 border-t border-ink-800 bg-ink-900/50 space-y-2">
-        {showInstallButton && onInstallApp && (
+      {/* Settings & Tools Footer */}
+      <div className="p-3 border-t border-ink-800 bg-ink-900/30 space-y-3">
+        
+        {/* Model Settings Embedded */}
+        <div className="space-y-1">
+           <ModelSettings 
+              config={currentModelConfig || DEFAULT_MODEL_CONFIG} 
+              onUpdateConfig={onUpdateModelConfig} 
+              disabled={!currentSessionId}
+           />
+        </div>
+
+        <div className="flex flex-col gap-1 pt-1">
+          {showInstallButton && onInstallApp && (
+            <button
+              onClick={onInstallApp}
+              className="w-full flex items-center gap-2 text-emerald-400 hover:text-white hover:bg-emerald-900/30 p-2 rounded-lg transition-colors text-xs font-medium border border-emerald-900/50"
+            >
+              <Smartphone className="w-3.5 h-3.5" />
+              Install App
+            </button>
+          )}
           <button
-            onClick={onInstallApp}
-            className="w-full flex items-center gap-2 text-emerald-400 hover:text-white hover:bg-emerald-900/30 p-2 rounded-lg transition-colors text-sm border border-emerald-900/50"
+            onClick={onToggleCharacterPanel}
+            className="w-full flex items-center gap-2 text-ink-300 hover:text-white hover:bg-ink-800 p-2 rounded-lg transition-colors text-xs font-medium border border-transparent hover:border-ink-700"
           >
-            <Smartphone className="w-4 h-4" />
-            Install App
+            <Users className="w-3.5 h-3.5" />
+            Character Workshop
           </button>
-        )}
-        <button
-          onClick={onToggleCharacterPanel}
-          className="w-full flex items-center gap-2 text-ink-300 hover:text-white hover:bg-ink-800 p-2 rounded-lg transition-colors text-sm border border-transparent hover:border-ink-700"
-        >
-          <Users className="w-4 h-4" />
-          Character Workshop
-        </button>
+        </div>
       </div>
     </div>
   );
