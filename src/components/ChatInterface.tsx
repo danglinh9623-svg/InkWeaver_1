@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { ChatSession } from '../types';
-import { Send, RefreshCw, Loader2, Sparkles, Book, Copy, Check, Feather } from 'lucide-react';
+import { Send, RefreshCw, Loader2, Book, Copy, Check, Feather } from 'lucide-react';
 
 interface ChatInterfaceProps {
   session: ChatSession | null;
@@ -29,6 +29,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
     scrollToBottom();
   }, [session?.messages]);
 
+  // Auto-resize textarea
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
     if (textareaRef.current) {
@@ -132,6 +133,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                   {copiedId === msg.id ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
                 </button>
 
+                {/* Regenerate Button (only for last model message) */}
                 {msg.role === 'model' && idx === session.messages.length - 1 && !isGenerating && (
                   <button
                     onClick={onRegenerate}
