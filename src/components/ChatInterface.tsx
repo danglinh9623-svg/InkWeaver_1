@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { ChatSession } from '../types';
-import { Send, RefreshCw, Loader2, Book, Copy, Check, Feather } from 'lucide-react';
+import { Send, RefreshCw, Loader2, Book, Copy, Check, Feather, Sparkles } from 'lucide-react';
 
 interface ChatInterfaceProps {
   session: ChatSession | null;
@@ -90,14 +90,17 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto p-4 space-y-6">
         {session.messages.length === 0 && (
-          <div className="h-full flex flex-col items-center justify-center text-center p-8 opacity-80">
-             <div className="w-16 h-16 bg-ink-900/50 rounded-full flex items-center justify-center mb-4 border border-ink-800 shadow-lg">
-                <Feather className="w-8 h-8 text-indigo-400" />
+          <div className="h-full flex flex-col items-center justify-center text-ink-500 gap-4">
+             <Sparkles className="w-8 h-8 opacity-50" />
+             <p className="text-sm font-medium">The page is blank. What happens next?</p>
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs w-full max-w-lg px-4">
+                <button onClick={() => onSendMessage("Create a dark fantasy plot outline about a fallen paladin.")} className="p-3 border border-ink-800 hover:bg-ink-800 rounded text-left transition-colors bg-ink-900/50">
+                  Create a dark fantasy plot...
+                </button>
+                <button onClick={() => onSendMessage("Analyze the pacing of a slow-burn romance.")} className="p-3 border border-ink-800 hover:bg-ink-800 rounded text-left transition-colors bg-ink-900/50">
+                  Analyze slow-burn romance pacing...
+                </button>
              </div>
-             <h3 className="text-xl font-serif text-ink-100 mb-3">Greetings, Author</h3>
-             <p className="text-ink-400 max-w-sm leading-relaxed text-sm">
-               The blank page is not a void, but a canvas waiting for your touch. I am ready to assist you in weaving worlds, sculpting souls, and crafting your masterpiece. Where shall we begin?
-             </p>
           </div>
         )}
 
@@ -115,6 +118,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
             >
               {msg.isThinking && (
                  <div className="flex items-center gap-2 text-xs text-purple-300 mb-3 bg-purple-900/20 p-2 rounded border border-purple-500/20 animate-pulse">
+                    <Loader2 className="w-3 h-3 animate-spin" />
                     <span>Thinking intensely...</span>
                  </div>
               )}
