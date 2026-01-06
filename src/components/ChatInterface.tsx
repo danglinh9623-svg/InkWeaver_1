@@ -1,14 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { ChatSession, ModelConfig } from '../types';
-import { Send, RefreshCw, Loader2, Sparkles, Book, Copy, Check } from 'lucide-react';
-import ModelSettings from './ModelSettings';
+import { ChatSession } from '../types';
+import { Send, RefreshCw, Loader2, Sparkles, Book, Copy, Check, Feather } from 'lucide-react';
 
 interface ChatInterfaceProps {
   session: ChatSession | null;
   onSendMessage: (text: string) => Promise<void>;
   onRegenerate: () => Promise<void>;
-  onUpdateConfig: (config: ModelConfig) => void;
   isGenerating: boolean;
 }
 
@@ -16,7 +14,6 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   session, 
   onSendMessage, 
   onRegenerate, 
-  onUpdateConfig,
   isGenerating 
 }) => {
   const [input, setInput] = useState('');
@@ -82,25 +79,24 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   return (
     <div className="flex-1 flex flex-col h-full bg-ink-950 relative">
       
-      <div className="h-16 border-b border-ink-800 flex items-center justify-between px-6 bg-ink-950/80 backdrop-blur-md z-10 sticky top-0">
+      {/* Top Bar */}
+      <div className="h-14 border-b border-ink-800 flex items-center justify-between px-6 bg-ink-950/80 backdrop-blur-md z-10 sticky top-0">
          <h2 className="font-serif font-semibold text-white truncate max-w-md">
            {session.title || "Untitled Story"}
          </h2>
       </div>
 
+      {/* Messages Area */}
       <div className="flex-1 overflow-y-auto p-4 space-y-6">
         {session.messages.length === 0 && (
-          <div className="h-full flex flex-col items-center justify-center text-ink-500 gap-4">
-             <Sparkles className="w-8 h-8 opacity-50" />
-             <p>The page is blank. What happens next?</p>
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs w-full max-w-lg">
-                <button onClick={() => onSendMessage("Create a dark fantasy plot outline about a fallen paladin.")} className="p-3 border border-ink-800 hover:bg-ink-800 rounded text-left transition-colors">
-                  Create a dark fantasy plot...
-                </button>
-                <button onClick={() => onSendMessage("Analyze the pacing of a slow-burn romance.")} className="p-3 border border-ink-800 hover:bg-ink-800 rounded text-left transition-colors">
-                  Analyze slow-burn romance pacing...
-                </button>
+          <div className="h-full flex flex-col items-center justify-center text-center p-8 opacity-80">
+             <div className="w-16 h-16 bg-ink-900/50 rounded-full flex items-center justify-center mb-4 border border-ink-800 shadow-lg">
+                <Feather className="w-8 h-8 text-indigo-400" />
              </div>
+             <h3 className="text-xl font-serif text-ink-100 mb-3">Greetings, Author</h3>
+             <p className="text-ink-400 max-w-sm leading-relaxed text-sm">
+               The blank page is not a void, but a canvas waiting for your touch. I am ready to assist you in weaving worlds, sculpting souls, and crafting your masterpiece. Where shall we begin?
+             </p>
           </div>
         )}
 
@@ -126,6 +122,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 <ReactMarkdown>{msg.text}</ReactMarkdown>
               </div>
 
+              {/* Actions Row */}
               <div className="flex items-center justify-end gap-2 mt-2 pt-2 border-t border-transparent group-hover:border-ink-800/50 transition-colors">
                 <button
                   onClick={() => copyToClipboard(msg.text, msg.id)}
@@ -159,13 +156,10 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         <div ref={messagesEndRef} />
       </div>
 
+      {/* Input Area */}
       <div className="p-4 bg-ink-950 border-t border-ink-800">
         <div className="max-w-4xl mx-auto flex flex-col gap-2">
             
-            <div className="flex justify-end">
-               <ModelSettings config={session.modelConfig} onUpdateConfig={onUpdateConfig} />
-            </div>
-
             <div className="relative flex items-end gap-2 bg-ink-900 rounded-xl border border-ink-700 focus-within:ring-2 focus-within:ring-indigo-500/50 focus-within:border-indigo-500 transition-all p-2 shadow-lg">
               <textarea
                 ref={textareaRef}
