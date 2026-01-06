@@ -53,6 +53,7 @@ const App: React.FC = () => {
     };
     setSessions(prev => [newSession, ...prev]);
     setCurrentSessionId(newSession.id);
+    // On mobile, keep sidebar open briefly or let user close it to type
   }, []);
 
   const deleteSession = useCallback((id: string) => {
@@ -294,6 +295,8 @@ const App: React.FC = () => {
             isOpen={true} 
             sessions={sessions}
             currentSessionId={currentSessionId}
+            currentModelConfig={currentSession?.modelConfig}
+            onUpdateModelConfig={updateSessionConfig}
             onSelectSession={(id) => { setCurrentSessionId(id); if(window.innerWidth < 768) setIsSidebarOpen(false); }}
             onNewSession={createNewSession}
             onDeleteSession={deleteSession}
@@ -315,7 +318,6 @@ const App: React.FC = () => {
           session={currentSession}
           onSendMessage={handleSendMessage}
           onRegenerate={handleRegenerate}
-          onUpdateConfig={updateSessionConfig}
           isGenerating={isGenerating}
         />
       </div>
