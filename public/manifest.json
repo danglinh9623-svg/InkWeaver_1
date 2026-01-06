@@ -1,0 +1,21 @@
+{
+  "name": "InkWeaver Storyteller",
+  "short_name": "InkWeaver",
+  "description": "Professional AI creative writing assistant",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1b232d",
+  "theme_color": "#1b232d",
+  "icons": [
+    {
+      "src": "https://cdn.jsdelivr.net/npm/lucide-static@0.344.0/icons/book-open.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "https://cdn.jsdelivr.net/npm/lucide-static@0.344.0/icons/book-open.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
